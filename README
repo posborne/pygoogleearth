@@ -1,0 +1,5 @@
+== PyGoogleEarth ==
+pygoogleearth is a python library that currently runs
+on windows (with pywin32 installed).  It provides access
+to most of the functionality exposed by the google earth
+COM API documented here: http://earth.google.com/comapi/
