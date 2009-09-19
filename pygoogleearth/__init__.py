@@ -23,19 +23,6 @@ class GoogleEarth(object):
         """
         self.ge = win32com.client.Dispatch('GoogleEarth.ApplicationGE')
         starttime = time.clock()
-        self._attribute_dict = {
-            'streaming_progress_percentage': self.ge.StreamingProgressPercentage,
-            'auto_pilot_speed': self.ge.StreamingProgressPercentage,
-            'view_extents': self.ge.ViewExtents,
-            'version_major': self.ge.VersionMajor,
-            'version_minor': self.ge.VersionMinor,
-            'version_build': self.ge.VersionBuild,
-            'version_app_type': self.ge.VersionAppType,
-            'elevation_exaggeration': self.ge.ElevationExaggeration,
-            'tour_controller': self.ge.TourController,
-            'search_controller': self.ge.SearchController,
-            'animation_controller': self.ge.animation_controller,
-        }
         # Check for initialization every tenth second or so until we succeed
         # or timeout (if a timeout is specified)
         while not self.ge.IsInitialized() :
@@ -44,17 +31,57 @@ class GoogleEarth(object):
             time.sleep(0.1)
     
     def __getattr__(self, name):
-        try:
-            self.ge._attribute_dict[name]
-        except KeyError:
+        if name == 'streaming_progress_percentage': 
+            return self.ge.StreamingProgressPercentage
+        elif name == 'auto_pilot_speed': 
+            return self.ge.StreamingProgressPercentage
+        elif name == 'view_extents': 
+            return self.ge.ViewExtents
+        elif name == 'version_major': 
+            return self.ge.VersionMajor
+        elif name == 'version_minor': 
+            return self.ge.VersionMinor
+        elif name == 'version_build': 
+            return self.ge.VersionBuild
+        elif name == 'version_app_type': 
+            return self.ge.VersionAppType
+        elif name == 'elevation_exaggeration': 
+            return self.ge.ElevationExaggeration
+        elif name == 'tour_controller': 
+            return self.ge.TourController
+        elif name == 'search_controller': 
+            return self.ge.SearchController
+        elif name == 'animation_controller': 
+            return self.ge.AnimationController
+        else:
             raise AttributeError
         
     def __setattr__(self, name, value):
-        try:
-            self.ge._attribute_dict[name] = value
-        except KeyError:
-            raise AttributeError
-   
+        if name == 'streaming_progress_percentage': 
+            self.ge.StreamingProgressPercentage = value
+        elif name == 'auto_pilot_speed': 
+            self.ge.StreamingProgressPercentage = value
+        elif name == 'view_extents': 
+            self.ge.ViewExtents = value
+        elif name == 'version_major': 
+            self.ge.VersionMajor = value
+        elif name == 'version_minor': 
+            self.ge.VersionMinor = value
+        elif name == 'version_build': 
+            self.ge.VersionBuild = value
+        elif name == 'version_app_type': 
+            self.ge.VersionAppType = value
+        elif name == 'elevation_exaggeration': 
+            self.ge.ElevationExaggeration = value
+        elif name == 'tour_controller': 
+            self.ge.TourController = value
+        elif name == 'search_controller': 
+            self.ge.SearchController = value
+        elif name == 'animation_controller': 
+            self.ge.AnimationController = value
+        else:
+            self.__dict__[name] = value
+
     def get_camera(self, consider_terrain=False):
         """
         Get a dictionary containing the parameters for the current camera.
