@@ -3,3 +3,6 @@ syntax: glob
 *.pyo
 *.*project
 *~
+build/*
+dist/*
+*.egg-info*
