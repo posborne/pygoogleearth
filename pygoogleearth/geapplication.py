@@ -12,7 +12,6 @@ except ImportError, e:
     print 'You may not have win32com installed.  win32com is included in pywin32'
     print 'which can be found here: http://sourceforge.net/projects/pywin32/'
     raise e
-import gehelper
 
 class AltitudeModes(object):
     RELATIVE_TO_GROUND = 0x1
