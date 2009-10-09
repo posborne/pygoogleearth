@@ -21,12 +21,20 @@ class InitializationException(Exception):
     pass
 
 class GoogleEarth(object):
+    """
+    :summary: Create a GoogleEarth instance.  
+    
+    This initializer will block until the initialization succeeds or 
+    a timeout occurs (if one is specified). If a timeout does occur an 
+    :exception:`InitializationException` will be raised.
+    
+    :param timeout: Timeout for application initialization. If a timeout is specified (if timeout is not None),
+                    then wait for timeout seconds to expire or for the
+                    application to become available.  If the timeout expires
+                    before the application becomes available a :exception:`InitializationException`
+                    will be raised.
+    """
     def __init__(self, timeout=None):
-        """
-        Create a GoogleEarth instance.  This initializer will block until the
-        initialization succeeds or a timeout occurs (if one is specified). If
-        a timeout does occur an InitializationException will be raised.
-        """
         self.ge = win32com.client.Dispatch('GoogleEarth.ApplicationGE')
         starttime = time.clock()
         # Check for initialization every tenth second or so until we succeed
@@ -93,7 +101,8 @@ class GoogleEarth(object):
         Get a dictionary containing the parameters for the current camera.
         These match the args which set_camera_params takes.
         
-        Here's an example:
+        Here's an example::
+    
         >>> ge = GoogleEarth()
         >>> orpos = ge.get_camera() # grab our original position
         >>> ge.set_camera_params(44.9773194, -093.2639111) # move to minneapolis
@@ -115,30 +124,29 @@ class GoogleEarth(object):
     
     def get_feature_by_href(self, href):
         """
-        Returns the feature with a given href.
-        Searches for feature in the Places and Layers panels and returns it as a IFeatureGE.
+        :summary: Returns the feature with a given href.
         
-        href is case sensitive and uses forward slashes '/' as the directory delimiter.
-        href is in the format: FileName#FeatureID
-        
-        For example, if you have a KML file C:/simple.kml, with the following placemark:
-        <Placemark id="SomeID">
-        
-        then the corresponding href would be:
-        C:/simple.kml#SomeID
+        Searches for feature in the Places and Layers panels and 
+        returns it as a IFeatureGE.
+
+        For example, if you have a KML file C:/simple.kml, 
+        with the following placemark: <Placemark id="SomeID"> then 
+        the corresponding href would be: C:/simple.kml#SomeID
         
         Although not all features have hrefs, an href is a unique identifier (unlike a name).
         
-        Parameters:
-                href     String that identifies feature as explained above.
-                pFeature     Output feature matching given href. If no feature is found 
-                             matching href, then it is set to NULL.
+        :param href: String that identifies feature as explained above. 
+                     href is case sensitive and uses forward slashes '/' 
+                     as the directory delimiter.  href is in the format: ::FileName#FeatureID::
+        
+        :returns: Output feature matching given href. If no feature is found
+                  matching href, then it is set to NULL.
         """
         self.ge.GetFeatureByHref(href)
         
     def get_feature_by_name(self, name):
         """
-        Retrieves a feature matching a given name.
+        :summary: Retrieves a feature matching a given name.
 
         Returns the first feature with the given name by searching in the "Search Results", 
         "Places", and "Layers" panels and returning it as a IFeatureGE.
@@ -156,7 +164,7 @@ class GoogleEarth(object):
         
     def get_highlighted_feature(self):
         """
-        Retrieves currently highlighted feature (i.e. with focus).
+        :summary: Retrieves currently highlighted feature (i.e. with focus).
         
         If there is no currently selected feature, this method returns None.
 
@@ -176,10 +184,10 @@ class GoogleEarth(object):
     
     def get_my_places(self):
         """
-        Retrieves My Places folder.
+        :summary: Retrieves My Places folder.
         
-        Parameters:
-        pMyPlaces     Output feature for My Places folder. If folder is unavailable, this is set to NULL.
+        :returns: Output feature for My Places folder. If folder is 
+                  unavailable, this is set to None.
         """
         pass
     
@@ -194,8 +202,9 @@ class GoogleEarth(object):
         
     def get_point_on_terrain_from_screen_coords(self, screen_x, screen_y):
         """
-        Returns point on terrain from screen coordinates.
-
+        :summary: Returns point on terrain from screen coordinates.
+        
+        *Overview*
         This method allows an external application to query the geolocation and terrain altitude 
         of a point in the 3D viewpoint identified by its normalized screen coordinates 
         (screen_x, screen_y), ranging from (-1, -1) to (+1, +1) inclusive.
@@ -219,20 +228,20 @@ class GoogleEarth(object):
             * if ElevationExaggeration is zero, then IPointOnTerrainGE::Altitude is set to zero and 
               IPointOnTerrainGE::ZeroElevationExaggeration is set to true.
         
-        Parameters:
-        screen_x   Normalized screen position along the x axis. Valid range is from -1 
-                   (left hand side of the screen) to +1 (right hand side of the screen). 
-                   Values outside the valid range are clamped.
-        screen_y   Normalized screen position along the y axis. Valid range is from -1
-                   (bottom of the screen) to +1 (top of the screen). Values outside the
-                   valid range are clamped.
+        
+        :param screen_x: Normalized screen position along the x axis. Valid range is from -1 
+                         (left hand side of the screen) to +1 (right hand side of the screen). 
+                         Values outside the valid range are clamped.
+        :param: screen_y: Normalized screen position along the y axis. Valid range is from -1
+                          (bottom of the screen) to +1 (top of the screen). Values outside the
+                          valid range are clamped.
         """
         terrain_point = self.ge.GetPointOnTerrainFromScreenCoords(screen_x, screen_y)
         return gehelper.point_dict_from_terrain_point(terrain_point)
 
     def hide_description_balloons(self):
         """
-        Hides all visible description balloons.
+        :summary: Hides all visible description balloons.
         
         Turns off any visible description balloons for all features.
         """
@@ -240,39 +249,38 @@ class GoogleEarth(object):
 
     def is_online(self):
         """
-        Returns whether the application is connected to the data server or not.
+        :summary: Returns whether the application is connected to the data server or not.
         
         If the application is connected to the server, then Google Earth uses the server's Layers databases. 
         Otherwise, it uses local cached Layers databases.
         
-        Parameters:
-        isOnline     Output status.
+        :returns: Output status
+        :rtype: bool
         """
         return self.ge.IsOnline()
 
     def load_kml_data(self, kml_data):
         """
-        Loads KML into Google Earth.
+        :summary: Loads KML into Google Earth.
+        
         This loads KML data from a string as opposed to loading from a file.
         
-        Parameters:
-        kml_data     String containing KML data. This must contain valid KML data.
+        :param kml_data: String containing KML data. This must contain valid KML data.
         """
         self.ge.LoadKmlData(kml_data)
         
-    def open_km_file(self, filename, suppress_messages=False):
+    def open_kml_file(self, filename, suppress_messages=False):
         """
-        Schedules a KML file to be loaded in Google Earth.
+        :summary: Schedules a KML file to be loaded in Google Earth.
 
-        Parameters:
-        filename          The full path name of the file to be loaded, with forward slashes '/'
+        :param: filename  The full path name of the file to be loaded, with forward slashes '/'
                           as the directory delimiter character. If possible, the application will 
                           fly to the view of the feature(s) that were created after opening that file.
-        suppress_messages If true, ignores all common KML loading dialog boxes warnings and errors, and 
-                          chooses the default option for each one. For example, this function ignores 
-                          confirmations to reload a previously loaded KML file and losing unsaved changes. 
-                          This function will not ignore dialog boxes with critical errors such as 
-                          when core libraries cannot be loaded.
+        :param: suppress_messages: If true, ignores all common KML loading dialog boxes warnings and errors, and 
+                                   chooses the default option for each one. For example, this function ignores 
+                                   confirmations to reload a previously loaded KML file and losing unsaved changes. 
+                                   This function will not ignore dialog boxes with critical errors such as 
+                                   when core libraries cannot be loaded.
         """
         self.ge.OpenKmlFile(filename, suppress_messages)
 
