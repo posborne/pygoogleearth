@@ -1,4 +1,17 @@
 class CameraInfo(object):
+    """
+    Represents and encapsulates different pieces of data about
+    a Google Earth camera.
+    
+    The following attributes are defined as part of a CameraInfo object:
+       * focus_point_latitude
+       * focus_point_longitude
+       * focus_point_altitude
+       * focus_point_altitude_mode
+       * range
+       * tilt
+       * azimuth
+    """
     def __init__(self, comobject):
         self.ge_ci = comobject
     

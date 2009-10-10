@@ -151,14 +151,14 @@ class GoogleEarth(object):
         Returns the first feature with the given name by searching in the "Search Results", 
         "Places", and "Layers" panels and returning it as a IFeatureGE.
         
-        Note:
+        .. note::
+        
             A name is not necessarily unique, so another option is to use 
             GetFeatureByHref, which some features support.
         
-        Parameters:
-        name       Feature name to be retrieved
-        pFeature   Output feature. If there is more than one feature with given name, 
-                   returns first instance. If no features exist with given name, returns NULL.
+        :param name: Feature name to be retrieved
+        :returns:    Output feature. If there is more than one feature with given name, 
+                     returns first instance. If no features exist with given name, returns None.
         """
         self.ge.GetFeatureByName(name)
         
@@ -168,8 +168,7 @@ class GoogleEarth(object):
         
         If there is no currently selected feature, this method returns None.
 
-        Parameters:
-        pFeature     Output highlighted feature. If no feature is highlighted, this is set to NULL.
+        :returns: Output highlighted feature. If no feature is highlighted, this is None.
         """
         highlighted = self.ge.GetHighlightedFeature()
         
@@ -194,9 +193,8 @@ class GoogleEarth(object):
     def get_temporary_places(self):
         """
         Retrieves Temporary Places folder.
-        
-        Parameters:
-        pTemporaryPlaces     Output feature for Temporary Places. folder. If folder is unavailable, this is set to NULL.
+
+        :returns: Output feature for Temporary Places folder. If folder is unavailable, return None.
         """
         pass
         
@@ -255,7 +253,6 @@ class GoogleEarth(object):
         Otherwise, it uses local cached Layers databases.
         
         :returns: Output status
-        :rtype: bool
         """
         return self.ge.IsOnline()
 
@@ -273,15 +270,15 @@ class GoogleEarth(object):
         """
         :summary: Schedules a KML file to be loaded in Google Earth.
 
-        :param: filename  The full path name of the file to be loaded, with forward slashes '/'
-                          as the directory delimiter character. If possible, the application will 
-                          fly to the view of the feature(s) that were created after opening that file.
-        :param: suppress_messages: If true, ignores all common KML loading dialog boxes warnings and errors, and 
-                                   chooses the default option for each one. For example, this function ignores 
-                                   confirmations to reload a previously loaded KML file and losing unsaved changes. 
-                                   This function will not ignore dialog boxes with critical errors such as 
-                                   when core libraries cannot be loaded.
-        """
+         :param filename              The full path name of the file to be loaded, with forward slashes '/'
+                                      as the directory delimiter character. If possible, the application will 
+                                      fly to the view of the feature(s) that were created after opening that file.
+        :param suppress_messages:     If true, ignores all common KML loading dialog boxes warnings and errors, and 
+                                      chooses the default option for each one. For example, this function ignores 
+                                      confirmations to reload a previously loaded KML file and losing unsaved changes. 
+                                      This function will not ignore dialog boxes with critical errors such as 
+                                      when core libraries cannot be loaded.
+        """                          
         self.ge.OpenKmlFile(filename, suppress_messages)
 
 
@@ -299,17 +296,16 @@ class GoogleEarth(object):
         This is an optimized way of setting the camera rather than using 
         SetCamera since it requires a much smaller number of COM calls.
 
-        Parameters:
-        lat       Latitude in degrees. Between -90 and 90.
-        lon       Longitude in degrees. Between -180 and 180.
-        alt       Altitude in meters.
-        alt_mode  Altitude mode that defines altitude reference origin.
-        range     Distance between focus point and camera in meters.
-        tilt      Tilt angle in degrees. Between 0 and 90.
-        azimuth   Azimuth angle in degrees.
-        speed     Speed factor to use. Overrides autopilot speed. Value must be greater than 0. 
-                  If greater than or equal to 5.0, the camera will immediately be set without any 
-                  transition. This mode is called 'teleport'.
+        :param lat:         Latitude in degrees. Between -90 and 90.
+        :param lon:         Longitude in degrees. Between -180 and 180.
+        :param alt:         Altitude in meters.
+        :param alt_mode:    Altitude mode that defines altitude reference origin.
+        :param range:       Distance between focus point and camera in meters.
+        :param tilt:        Tilt angle in degrees. Between 0 and 90.
+        :param azimuth:     Azimuth angle in degrees.
+        :param speed:       Speed factor to use. Overrides autopilot speed. Value must be greater than 0. 
+                            If greater than or equal to 5.0, the camera will immediately be set without any 
+                            transition. This mode is called 'teleport'.
         """
         self.ge.SetCameraParams(lat, lon, alt, alt_mode, range, tilt, azimuth, speed)
 
@@ -328,7 +324,8 @@ class GoogleEarth(object):
         Shows the description balloon for a feature that has a view. 
         This method fails if the specified feature has no view.
         
-        Note:
+        .. note::
+        
         Turning on the description balloon for a feature may turn off the 
         description balloons for other features.
         """

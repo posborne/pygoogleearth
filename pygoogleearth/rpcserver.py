@@ -3,14 +3,14 @@ import geapplication
  
 class GoogleEarthXMLRPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer):
     """
-    # Example Server Creation:
-    import pygoogleearth
-    rpcserver = pygoogleearth.GoogleEarthXMLRPCServer(('localhost', 9500))
-    rpcserver.serve_forever()
-    # Example Client
-    import xmlrpclib
-    google_earth = xmlrpclib.ServerProxy('http://localhost:9500')
-    google_earth.set_camera_params(50.234392, -94.234343)
+    Example Server Creation::
+       import pygoogleearth
+       rpcserver = pygoogleearth.GoogleEarthXMLRPCServer(('localhost', 9500))
+       rpcserver.serve_forever()
+       # Example Client
+       import xmlrpclib
+       google_earth = xmlrpclib.ServerProxy('http://localhost:9500')
+       google_earth.set_camera_params(50.234392, -94.234343)
     """
     # TODO: what about properties from __getattr__, __setattr__?
     def __init__(self, *args, **kwargs):

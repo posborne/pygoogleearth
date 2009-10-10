@@ -1,6 +1,6 @@
 class SearchController(object):
     """
-    This contains search options and controls.
+    :summary: This contains search options and controls.
     
     Use this interface to control searches and their results.
     
@@ -12,7 +12,7 @@ class SearchController(object):
     
     def search(self, search_string):
         """
-        Performs a regular search.
+        :summary: Performs a regular search.
 
         Performs a search given a search string. This search string may 
         represent a location, driving directions, businesses, or anything 
@@ -20,20 +20,20 @@ class SearchController(object):
 
         There is a limit on the number of searches within a certain time period. When this limit is exceeded, the function returns E_USAGE_LIMIT_EXCEEDED, and the search is not performed. This restriction is subject to change.
 
-        Note:
+        .. note::
+        
         This function may return before search is actually complete, which 
         means that GetResults might not immediately reflect very recent searches 
         made. Use IsSearchInProgress to check if there is a search in progress.
 
-        Parameters:
-        searchString     string containing search parameters. Could contain 
-                         special keywords such as "near", "from:", "to:", etc.
+        :param searchString: string containing search parameters. Could contain 
+                             special keywords such as "near", "from:", "to:", etc.
         """
         self.ge_ac.Search(search_string)
     
     def is_search_in_progress(self):
         """
-        Checks if there is any search currently in progress.
+        :summary: Checks if there is any search currently in progress.
 
         Useful for knowing when search is complete after calling Search and 
         before calling GetResults.
@@ -42,12 +42,13 @@ class SearchController(object):
     
     def get_results(self):
         """
-        Retrieves search results.
+        :summary: Retrieves search results.
 
         Retrieves the collection of features in the search results.
 
-        Note:
-        Searches may take a few moments to complete, which means that 
+        .. note::
+
+\        Searches may take a few moments to complete, which means that 
         GetResults might not immediately reflect very recent searches 
         made. Use IsSearchInProgress to check if there is a search 
         in progress.
@@ -56,7 +57,7 @@ class SearchController(object):
     
     def clear_results(self):
         """
-        Clears all search results.
+        :summary: Clears all search results.
 
         Clears all the features from search results.
         """

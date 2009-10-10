@@ -1,6 +1,6 @@
 class FeatureCollection(object):
     """
-    This is a collection of features.
+    :summary: This is a collection of features.
 
     Represents a shallow snapshot of a collection of features. Stores references 
     to the features at the time of creation. If those features change after 
@@ -20,7 +20,7 @@ class FeatureCollection(object):
     
     def item(self, index):
         """
-        Retrieves an item from the collection.
+        :summary: Retrieves an item from the collection.
 
         Retrieves item with the given one-based index: the first element's 
         index is 1, and the last element's index is equal to the collection's 
