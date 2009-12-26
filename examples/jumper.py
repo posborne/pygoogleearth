@@ -1,6 +1,6 @@
-import math
 import time
 import random
+import pinpoint
 import pygoogleearth
 
 MIN_LAT = -90.0
@@ -19,5 +19,8 @@ if __name__ == '__main__':
     ge = pygoogleearth.GoogleEarth()
     for i in xrange(5):
         lat, lon = random_camera_jump(ge)
+        kml = pinpoint.construct_triangle_kml(lat, lon)
+        print kml
+        ge.load_kml_data(kml)
         print "Jumping to %f, %f" % (lat, lon)
         time.sleep(5.0)
