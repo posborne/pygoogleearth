@@ -1,5 +1,5 @@
 from kml.kmlabstract import KMLObject
-import xml.dom
+from xml.dom.minidom import getDOMImplementation
 
 __all__ = ['KMLFeature', 'KMLOverlay', 'KMLPlacemark', 
            'KMLContainer', 'KMLDocument', 'KMLFolder', 
@@ -8,8 +8,14 @@ __all__ = ['KMLFeature', 'KMLOverlay', 'KMLPlacemark',
 class KMLFeature(KMLObject):
     """
     NOTE:: This is an abstract element and cannot be used directly 
-    in a KML file.
+           in a KML file.
     """
+    
+    ALLOWABLE_ELEMENTS = ['name', 'visibility', 'open',
+                          'address', 'phoneNumber', 'Snippet',
+                          'description', 'AbstractView', 'TimePrimitive',
+                          'styleUrl', 'StyleSelector', 'Region',
+                          'Metadata', 'ExtendedData',]
     
     def __init__(self, **kwargs):
         KMLObject.__init__(self, **kwargs)
@@ -26,8 +32,7 @@ class KMLOverlay(KMLFeature):
     order of multiple overlays and for adding color and transparency 
     values to the base image.
     """
-
-    ATTRS = ['color', 'drawOrder', 'Icon']
+    ALLOWABLE_ELEMENTS = ['color', 'drawOrder', 'Icon']
     
     def __init__(self, **kwargs):
         KMLFeature.__init__(self, **kwargs)
@@ -58,10 +63,10 @@ class KMLContainer(KMLFeature):
     in a KML file. 
     """
     
-    ATTRS = ['name', 'visibility', 'open', 'address',
-             'AddressDetails', 'phoneNumber', 'Snippet',
-             'description', 'AbstractView', 'TimePrimitive',
-             'styleUrl', 'StyleSelection', 'Region', 'Metadata',]
+    ALLOWABLE_ELEMENTS = ['name', 'visibility', 'open', 'address',
+                          'AddressDetails', 'phoneNumber', 'Snippet',
+                          'description', 'AbstractView', 'TimePrimitive',
+                          'styleUrl', 'StyleSelection', 'Region', 'Metadata',]
     
     def __init__(self, **kwargs):
         pass
@@ -82,6 +87,27 @@ class KMLDocument(KMLContainer):
     
     def __init__(self, **kwargs):
         KMLContainer.__init__(self, **kwargs)
+        self.features = []
+        self.schemas = []
+    
+    def getDOMView(self):
+        """Get a view of the KML document as an xml.dom documet"""
+        domImpl = getDOMImplementation()
+        document = domImpl.createDocument(namespaceURI='http://www.opengis.net/kml/2.2', 
+                                          qualifiedName='kml',
+                                          doctype=None)
+        kml_element = document.documentElement
+        
+        # We do a recursive in-order iterative traversal of the KML tree
+        kml_element.appendChild(self.getDOMNode())
+        
+    def getXMLView(self):
+        """Get a view of the KML document as compressed XML (KML)"""
+        
+    def getPretyXMLView(self):
+        """Get a view of the KML document as pretty XML (KML)"""
+        
+    
     
 class KMLFolder(KMLContainer):
     """
@@ -105,8 +131,8 @@ class KMLPhotoOverlay(KMLOverlay):
     Camera.
     """
     
-    ATTRS = ['rotation', 'ViewVolume', 'ImagePyramid',
-             'Point', 'shape', ]
+    ALLOWABLE_ELEMENTS = ['rotation', 'ViewVolume', 'ImagePyramid',
+                          'Point', 'shape', ]
 
     def __init__(self, **kwargs):
         KMLOverlay.__init__(self, **kwargs)
@@ -130,8 +156,8 @@ class KMLScreenOverlay(KMLOverlay):
     and size defined by the screen overlay.
     """
     
-    ATTRS = ['overlayXY', 'screenXY', 'rotationXY',
-             'size', 'rotation']
+    ALLOWABLE_ELEMENTS = ['overlayXY', 'screenXY', 'rotationXY',
+                          'size', 'rotation']
     
     def __init__(self, **kwargs):
         KMLOverlay.__init__(self, **kwargs)
@@ -147,7 +173,7 @@ class KMLGroundOverlay(KMLOverlay):
     and LatLonBox bounds defined by the ground overlay.
     """
     
-    ATTRS = ['altitude', 'altitudeMode', 'LatLonBox',]
+    ALLOWABLE_ELEMENTS = ['altitude', 'altitudeMode', 'LatLonBox',]
     
     def __init__(self, **kwargs):
         KMLOverlay.__init__(self, **kwargs)

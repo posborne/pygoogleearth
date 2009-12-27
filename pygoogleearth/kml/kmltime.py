@@ -15,7 +15,7 @@ class KMLTimeSpan(KMLTimePrimitive):
     Schema Part 2: Datatypes Second Edition). The value can be 
     expressed as yyyy-mm-ddThh:mm:sszzzzzz, where T is the separator 
     between the date and the time, and the time zone is either Z 
-    (for UTC) or zzzzzz, which represents ±hh:mm in relation to UTC. 
+    (for UTC) or zzzzzz, which represents +/-hh:mm in relation to UTC. 
     Additionally, the value can be expressed as a date only. 
     See <TimeStamp> for examples.
     """
