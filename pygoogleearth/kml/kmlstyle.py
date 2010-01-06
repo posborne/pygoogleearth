@@ -1,11 +1,11 @@
 from kml.kmlabstract import KMLObject
 
 class KMLStyleSelector(KMLObject):
-    pass
+    TAGNAME = 'StyleSelector'
 
 class KMLStyle(KMLStyleSelector):
-    pass
+    TAGNAME = 'Style'
 
 class KMLStyleMap(KMLStyleSelector):
-    pass
+    TAGNAME = 'StyleMap'
 

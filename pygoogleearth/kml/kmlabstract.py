@@ -1,4 +1,5 @@
 from xml.dom import minidom
+
 class KMLMetaClass(type):
     """Metaclass for all KML objects"""
     
@@ -30,21 +31,57 @@ class KMLObject(object):
     TAGNAME = 'Object' # Note: Abstract, but provided as reference
     ALLOWABLE_ATTRS = ['id', 'targetId',]
     
-    def __init__(self, **kwargs):
-        self.attributes = []
+    def __init__(self, *args, **kwargs):
+        self.attributes = {}
+        for attribute in kwargs.keys():
+            if attribute in self.ALLOWABLE_ATTRS:
+                self.attributes[attribute] = kwargs[attribute]
         self.children = []
+    
+    def __setattr__(self, name, value):
+        if name in self.ALLOWABLE_ATTRS:
+            self.attributes[name] = value
+        else:
+            # Add the item to the dictionary as usual
+            self.__dict__[name] = value
+    
+    def append(self, element):
+        """Append the given element and return it for chaining
+        
+        We append the provided KMLObject to the list of elements for
+        this KMLObject.  In the case that we do not receive a KMLObject
+        or that object has the wrong type, we raise TypeError.
+        
+        It should be noted that the current element is always
+        returned upon successful append.  This allows us to chain together
+        operations as follows:
+        >>> from pygoogleearth.kml import *
+        >>> doc = KMLDocument()
+        >>> # add a photo overlay and point to doc
+        >>> (doc.append(KMLPhotoOverlay())
+                .append(KMLPoint()))
+        <<KMLDocument at ...>>
+        """
+        #if not isinstance(element, KMLObject):
+        #    raise TypeError, "Value must be a KMLObject, not a %s" % type(element)
+        if element.TAGNAME in self.ALLOWABLE_ELEMENTS or True:
+            self.children.append(element)
+            return element
+        else:
+            raise TypeError, "That element is not allowed for this KML object"
     
     def get_dom_node(self):
         """Get a DOM representation of this node"""
         element = minidom.Element(tagName=self.TAGNAME)
         
         # attributes
-        for attr_key, attr_value in getattr(self, 'attributes', {}):
-            element.setAttribute(attr_key, attr_value)
+        attributes = getattr(self, 'attributes', {})
+        for attr_key in attributes.keys():
+            element.setAttribute(attr_key, attributes[attr_key])
             
-        # children elements
+        # children elements (we add recursivly)
         for encapsulated_element in self.children:
-            element.appendChild(encapsulated_element)
+            element.appendChild(encapsulated_element.get_dom_node())
         
         return element
 

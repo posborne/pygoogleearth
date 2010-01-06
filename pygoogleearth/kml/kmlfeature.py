@@ -10,15 +10,15 @@ class KMLFeature(KMLObject):
     NOTE:: This is an abstract element and cannot be used directly 
            in a KML file.
     """
-    
+    TAGNAME = 'Feature'
     ALLOWABLE_ELEMENTS = ['name', 'visibility', 'open',
                           'address', 'phoneNumber', 'Snippet',
                           'description', 'AbstractView', 'TimePrimitive',
                           'styleUrl', 'StyleSelector', 'Region',
                           'Metadata', 'ExtendedData',]
     
-    def __init__(self, **kwargs):
-        KMLObject.__init__(self, **kwargs)
+    def __init__(self, *args, **kwargs):
+        KMLObject.__init__(self, *args, **kwargs)
     
 class KMLOverlay(KMLFeature):
     """
@@ -32,6 +32,7 @@ class KMLOverlay(KMLFeature):
     order of multiple overlays and for adding color and transparency 
     values to the base image.
     """
+    TAGNAME = 'Overlay'
     ALLOWABLE_ELEMENTS = ['color', 'drawOrder', 'Icon']
     
     def __init__(self, **kwargs):
@@ -51,7 +52,7 @@ class KMLPlacemark(KMLFeature):
     
     Contained By: KMLDocument, KMLFolder
     """
-    
+    TAGNAME = 'Placemark'
     def __init__(self, **kwargs):
         KMLFeature.__init__(self, **kwargs)
     
@@ -62,15 +63,14 @@ class KMLContainer(KMLFeature):
     NOTE:: This is an abstract element and cannot be used directly 
     in a KML file. 
     """
-    
+    TAGNAME = 'Feature'
     ALLOWABLE_ELEMENTS = ['name', 'visibility', 'open', 'address',
                           'AddressDetails', 'phoneNumber', 'Snippet',
                           'description', 'AbstractView', 'TimePrimitive',
                           'styleUrl', 'StyleSelection', 'Region', 'Metadata',]
     
-    def __init__(self, **kwargs):
-        pass
-    
+    def __init__(self, *args, **kwargs):
+        KMLFeature.__init__(self, *args, **kwargs)
     
 class KMLDocument(KMLContainer):
     """
@@ -85,13 +85,15 @@ class KMLDocument(KMLContainer):
            in the Document.
     """
     
-    def __init__(self, **kwargs):
-        KMLContainer.__init__(self, **kwargs)
+    TAGNAME = 'Document'
+    
+    def __init__(self, *args, **kwargs):
+        KMLContainer.__init__(self, *args, **kwargs)
         self.features = []
         self.schemas = []
     
-    def getDOMView(self):
-        """Get a view of the KML document as an xml.dom documet"""
+    def dom_view(self):
+        """Get a view of the KML document as an minidom documet"""
         domImpl = getDOMImplementation()
         document = domImpl.createDocument(namespaceURI='http://www.opengis.net/kml/2.2', 
                                           qualifiedName='kml',
@@ -99,22 +101,25 @@ class KMLDocument(KMLContainer):
         kml_element = document.documentElement
         
         # We do a recursive in-order iterative traversal of the KML tree
-        kml_element.appendChild(self.getDOMNode())
+        kml_element.appendChild(self.get_dom_node())
+        return document
         
-    def getXMLView(self):
+    def xml_view(self):
         """Get a view of the KML document as compressed XML (KML)"""
+        return self.dom_view().toxml()
         
-    def getPretyXMLView(self):
+    def pretty_xml_view(self):
         """Get a view of the KML document as pretty XML (KML)"""
-        
-    
-    
+        return self.dom_view().toprettyxml()
+
 class KMLFolder(KMLContainer):
     """
     A Folder is used to arrange other Features hierarchically 
     (Folders, Placemarks, NetworkLinks, or Overlays). A Feature 
     is visible only if it and all its ancestors are visible.
     """
+    
+    TAGNAME = 'Folder'
     
     def __init__(self, **kwargs):
         KMLContainer.__init__(self, **kwargs)
@@ -130,7 +135,7 @@ class KMLPhotoOverlay(KMLOverlay):
     is placed at the specified location and oriented toward the 
     Camera.
     """
-    
+    TAGNAME = 'Folder'
     ALLOWABLE_ELEMENTS = ['rotation', 'ViewVolume', 'ImagePyramid',
                           'Point', 'shape', ]
 
@@ -155,7 +160,7 @@ class KMLScreenOverlay(KMLOverlay):
     contains no <href>, a rectangle is drawn using the color 
     and size defined by the screen overlay.
     """
-    
+    TAGNAME = 'ScreenOverlay'
     ALLOWABLE_ELEMENTS = ['overlayXY', 'screenXY', 'rotationXY',
                           'size', 'rotation']
     
@@ -172,7 +177,7 @@ class KMLGroundOverlay(KMLOverlay):
     contains no <href>, a rectangle is drawn using the color 
     and LatLonBox bounds defined by the ground overlay.
     """
-    
+    TAGNAME = 'GroundOverlay'
     ALLOWABLE_ELEMENTS = ['altitude', 'altitudeMode', 'LatLonBox',]
     
     def __init__(self, **kwargs):
