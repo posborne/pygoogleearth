@@ -1,5 +1,5 @@
 from pygoogleearth.kml import KMLDocument
-from pygoogleearth.kml.kmlabstract import KMLObject
+from pygoogleearth.kml import KMLObject
 
 if __name__ == '__main__':
     KMLTextNode = KMLLookAt = KMLLineString = KMLObject
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     print kml.pretty_xml_view()
     
 
-# EXAMPL KML
+# EXAMPLE KML
 #<?xml version="1.0" encoding="UTF-8"?>
 #<kml xmlns="http://www.opengis.net/kml/2.2"
 # xmlns:gx="http://www.google.com/kml/ext/2.2">   <!-- required when using gx-prefixed elements -->

@@ -1,5 +1,7 @@
-from kml.kmlabstract import KMLObject
+from pygoogleearth.kml import KMLObject
 from xml.dom.minidom import getDOMImplementation
+from pygoogleearth.kml.kmlfields import KMLBooleanField, KMLEnumeration,\
+    KMLStringField, KMLSnippet
 
 __all__ = ['KMLFeature', 'KMLOverlay', 'KMLPlacemark', 
            'KMLContainer', 'KMLDocument', 'KMLFolder', 
@@ -11,11 +13,19 @@ class KMLFeature(KMLObject):
            in a KML file.
     """
     TAGNAME = 'Feature'
-    ALLOWABLE_ELEMENTS = ['name', 'visibility', 'open',
-                          'address', 'phoneNumber', 'Snippet',
-                          'description', 'AbstractView', 'TimePrimitive',
-                          'styleUrl', 'StyleSelector', 'Region',
-                          'Metadata', 'ExtendedData',]
+    ALLOWABLE_ELEMENTS = [KMLStringField('name'),
+                          KMLBooleanField('visibility'),
+                          KMLBooleanField('open'),
+                          KMLStringField('address'), 
+                          KMLStringField('phoneNumber'), 
+                          KMLSnippet('Snippet'),
+                          KMLStringField('description'), 
+                          KMLEnumeration('AbstractView', ['Camera', 'LookAt']), 
+                          'TimePrimitive',
+                          KMLStringField('styleUrl'), 
+                          KMLStringField('StyleSelector'), 
+                          KMLStringField('Region'),
+                          KMLStringField('ExtendedData')]
     
     def __init__(self, *args, **kwargs):
         KMLObject.__init__(self, *args, **kwargs)

@@ -1,4 +1,4 @@
-from kml.kmlabstract import KMLObject
+from pygoogleearth.kml.kmlabstract import KMLObject
 
 class KMLTimePrimitive(KMLObject):
     """This is an abstract element and cannot be used directly in a KML file. 
